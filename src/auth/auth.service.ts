@@ -3,6 +3,7 @@ import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
@@ -15,7 +16,7 @@ export class AuthService {
     return this.usersService.create(registerDto);
   }
 
-  async signIn(loginDto: CreateUserDto): Promise<{ access_token: string }> {
+  async signIn(loginDto: LoginDto): Promise<{ access_token: string }> {
     const { username, password } = loginDto;
 
     // find user

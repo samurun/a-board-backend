@@ -13,6 +13,9 @@ export class User {
   id: string;
 
   @Column()
+  name: string;
+
+  @Column()
   @Unique(['username'])
   username: string;
 
