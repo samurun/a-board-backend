@@ -32,8 +32,8 @@ export class PostsController {
   }
 
   @Get()
-  findAll() {
-    return this.postsService.findAll();
+  findAll(@Query() query?: { community?: string; title?: string }) {
+    return this.postsService.findAll(query);
   }
 
   @Get(':id')

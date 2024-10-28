@@ -8,7 +8,7 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from './entities/post.entity';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { UsersService } from 'src/users/users.service';
 
 @Injectable()
@@ -44,8 +44,27 @@ export class PostsService {
     }
   }
 
-  async findAll(): Promise<Partial<Post>[]> {
+  async findAll({
+    community,
+    title,
+  }: {
+    community?: string;
+    title?: string;
+  }): Promise<Partial<Post>[]> {
+    // Create the where clause
+    const where: any = {};
+
+    if (community) {
+      // If the community is provided, add it to the where clause
+      where.community = community;
+    }
+    if (title) {
+      // If the title is provided, add it to the where clause
+      where.title = ILike(`%${title}%`);
+    }
+
     return this.postRepository.find({
+      where, // where clause
       relations: ['author'],
       select: {
         id: true,
