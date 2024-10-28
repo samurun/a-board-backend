@@ -84,6 +84,43 @@ export class PostsService {
     });
   }
 
+  async findMyPosts(
+    authorId: string,
+    { community, title }: { community?: string; title?: string },
+  ): Promise<Partial<Post>[]> {
+    // Create the where clause
+    const where: any = {};
+
+    if (community) {
+      // If the community is provided, add it to the where clause
+      where.community = community;
+    }
+    if (title) {
+      // If the title is provided, add it to the where clause
+      where.title = ILike(`%${title}%`);
+    }
+
+    return this.postRepository.find({
+      where: { author: { id: authorId }, ...where },
+      relations: ['author'],
+      select: {
+        id: true,
+        title: true,
+        community: true,
+        content: true,
+        created_at: true,
+        author: {
+          id: true,
+          name: true,
+          username: true,
+        },
+      },
+      order: {
+        updated_at: 'DESC',
+      },
+    });
+  }
+
   async findOne(id: string) {
     // Check if the post exists
     const founded = await this.postRepository.findOne({

@@ -36,6 +36,16 @@ export class PostsController {
     return this.postsService.findAll(query);
   }
 
+  @Get('my')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  async findMyPosts(
+    @Request() { user: { sub: userId } }: Request & { user: { sub: string } },
+    @Query() query?: { community?: string; title?: string },
+  ) {
+    return this.postsService.findMyPosts(userId, query);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.postsService.findOne(id);
