@@ -3,29 +3,27 @@ import {
   CreateDateColumn,
   Entity,
   PrimaryGeneratedColumn,
-  Unique,
   UpdateDateColumn,
-  OneToMany,
+  ManyToOne,
 } from 'typeorm';
-import { Post } from '../../posts/entities/post.entity';
+import { User } from '../../users/entities/user.entity';
 
-@Entity('users')
-export class User {
+@Entity('posts')
+export class Post {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
-  name: string;
+  title: string;
 
   @Column()
-  @Unique(['username'])
-  username: string;
+  community: string;
 
   @Column()
-  password: string;
+  content: string;
 
-  @OneToMany(() => Post, (post) => post.author)
-  posts: Post[];
+  @ManyToOne(() => User, (user) => user.posts)
+  author: User;
 
   @CreateDateColumn({
     type: 'timestamp',
