@@ -59,6 +59,9 @@ export class PostsService {
           username: true,
         },
       },
+      order: {
+        updated_at: 'DESC',
+      },
     });
   }
 
