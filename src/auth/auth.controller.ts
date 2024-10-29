@@ -1,4 +1,4 @@
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from '../users/users.service';
 import {
   Body,
   Controller,
@@ -10,7 +10,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { CreateUserDto } from '../users/dto/create-user.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from './auth.guard';
 import { LoginDto } from './dto/login.dto';
@@ -24,7 +24,7 @@ export class AuthController {
   ) {}
 
   @Post('/register')
-  async singUp(@Body() authCredentialsDto: CreateUserDto): Promise<void> {
+  async signUp(@Body() authCredentialsDto: CreateUserDto): Promise<void> {
     return this.authService.register(authCredentialsDto);
   }
 
