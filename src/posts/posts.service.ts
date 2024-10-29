@@ -9,7 +9,7 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from './entities/post.entity';
 import { ILike, Repository } from 'typeorm';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class PostsService {
@@ -163,7 +163,7 @@ export class PostsService {
 
     // If the post does not exist, throw a not found exception
     if (!founded) {
-      throw new NotFoundException('Post not found');
+      throw new NotFoundException();
     }
 
     // Return the post
