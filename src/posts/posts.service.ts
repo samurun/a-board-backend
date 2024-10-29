@@ -198,6 +198,12 @@ export class PostsService {
       // Check if the post exists
       await this.findOne(id);
 
+      // Delete all comments first
+      await this.postRepository.manager.query(
+        'DELETE FROM comments WHERE "postId" = $1',
+        [id],
+      );
+
       // Delete the post
       await this.postRepository.delete(id);
     } catch (error) {
