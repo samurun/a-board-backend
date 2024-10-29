@@ -52,20 +52,14 @@ export class PostsService {
     title?: string;
   }): Promise<Partial<Post>[]> {
     // Create the where clause
-    const where: any = {};
+    const where: Record<string, any> = {
+      ...(community && { community }),
+      ...(title && { title: ILike(`%${title}%`) }),
+    };
 
-    if (community) {
-      // If the community is provided, add it to the where clause
-      where.community = community;
-    }
-    if (title) {
-      // If the title is provided, add it to the where clause
-      where.title = ILike(`%${title}%`);
-    }
-
-    return this.postRepository.find({
+    const posts = await this.postRepository.find({
       where, // where clause
-      relations: ['author'],
+      relations: ['author', 'comments', 'comments.author'],
       select: {
         id: true,
         title: true,
@@ -77,11 +71,23 @@ export class PostsService {
           name: true,
           username: true,
         },
+        comments: {
+          id: true,
+          content: true,
+          created_at: true,
+          author: {
+            id: true,
+            name: true,
+            username: true,
+          },
+        },
       },
       order: {
         updated_at: 'DESC',
       },
     });
+
+    return posts;
   }
 
   async findMyPosts(
@@ -89,20 +95,14 @@ export class PostsService {
     { community, title }: { community?: string; title?: string },
   ): Promise<Partial<Post>[]> {
     // Create the where clause
-    const where: any = {};
-
-    if (community) {
-      // If the community is provided, add it to the where clause
-      where.community = community;
-    }
-    if (title) {
-      // If the title is provided, add it to the where clause
-      where.title = ILike(`%${title}%`);
-    }
+    const where: Record<string, any> = {
+      ...(community && { community }),
+      ...(title && { title: ILike(`%${title}%`) }),
+    };
 
     return this.postRepository.find({
       where: { author: { id: authorId }, ...where },
-      relations: ['author'],
+      relations: ['author', 'comments', 'comments.author'],
       select: {
         id: true,
         title: true,
@@ -113,6 +113,16 @@ export class PostsService {
           id: true,
           name: true,
           username: true,
+        },
+        comments: {
+          id: true,
+          content: true,
+          created_at: true,
+          author: {
+            id: true,
+            name: true,
+            username: true,
+          },
         },
       },
       order: {
@@ -125,7 +135,7 @@ export class PostsService {
     // Check if the post exists
     const founded = await this.postRepository.findOne({
       where: { id },
-      relations: ['author'],
+      relations: ['author', 'comments', 'comments.author'],
       select: {
         id: true,
         title: true,
@@ -137,6 +147,16 @@ export class PostsService {
           id: true,
           name: true,
           username: true,
+        },
+        comments: {
+          id: true,
+          content: true,
+          created_at: true,
+          author: {
+            id: true,
+            name: true,
+            username: true,
+          },
         },
       },
     });

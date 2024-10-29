@@ -1,15 +1,16 @@
 import { Module } from '@nestjs/common';
-import { PostsService } from './posts.service';
-import { PostsController } from './posts.controller';
-import { Post } from './entities/post.entity';
+import { CommentsService } from './comments.service';
+import { CommentsController } from './comments.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Comment } from './entities/comment.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from 'src/users/users.module';
+import { PostsModule } from 'src/posts/posts.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Post]),
+    TypeOrmModule.forFeature([Comment]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
@@ -20,9 +21,9 @@ import { UsersModule } from 'src/users/users.module';
       inject: [ConfigService],
     }),
     UsersModule,
+    PostsModule,
   ],
-  controllers: [PostsController],
-  providers: [PostsService],
-  exports: [PostsService],
+  controllers: [CommentsController],
+  providers: [CommentsService],
 })
-export class PostsModule {}
+export class CommentsModule {}
